@@ -10,26 +10,23 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:pull_to_refresh/src/internals/slivers.dart';
-import 'internals/indicator_wrap.dart';
-import 'internals/refresh_physics.dart';
-import 'indicator/classic_indicator.dart';
-import 'indicator/material_indicator.dart';
 
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
 // ignore_for_file: DEPRECATED_MEMBER_USE
 
 /// when viewport not full one page, for different state,whether it should follow the content
-typedef void OnTwoLevel(bool isOpen);
+typedef OnTwoLevel = void Function(bool isOpen);
 
 /// when viewport not full one page, for different state,whether it should follow the content
-typedef bool ShouldFollowContent(LoadStatus? status);
+typedef ShouldFollowContent = bool Function(LoadStatus? status);
 
 /// global default indicator builder
 typedef IndicatorBuilder = Widget Function();
 
 /// a builder for attaching refresh function with the physics
-typedef Widget RefresherBuilder(BuildContext context, RefreshPhysics physics);
+typedef RefresherBuilder = Widget Function(
+    BuildContext context, RefreshPhysics physics);
 
 /// header state
 enum RefreshStatus {
@@ -82,27 +79,27 @@ enum LoadStatus {
 /// header indicator display style
 enum RefreshStyle {
   // indicator box always follow content
-  Follow,
+  follow,
   // indicator box follow content,When the box reaches the top and is fully visible, it does not follow content.
-  UnFollow,
+  unFollow,
 
   /// Let the indicator size zoom in with the boundary distance,look like showing behind the content
-  Behind,
+  behind,
 
   /// this style just like flutter RefreshIndicator,showing above the content
-  Front
+  front
 }
 
 /// footer indicator display style
 enum LoadStyle {
   /// indicator always own layoutExtent whatever the state
-  ShowAlways,
+  showAlways,
 
   /// indicator always own 0.0 layoutExtent whatever the state
-  HideAlways,
+  hideAlways,
 
   /// indicator always own layoutExtent when loading state, the other state is 0.0 layoutExtent
-  ShowWhenLoading
+  showWhenLoading
 }
 
 /// This is the most important component that provides drop-down refresh and up loading.
@@ -207,15 +204,15 @@ class SmartRefresher extends StatefulWidget {
   /// such as AnimatedList,RecordableList,doesn't allow to put into child,it will wrap it into SliverToBoxAdapter
   /// If you don't need pull down refresh ,just enablePullDown = false,
   /// If you  need pull up load ,just enablePullUp = true
-  SmartRefresher(
+  const SmartRefresher(
       {Key? key,
       required this.controller,
       this.child,
       this.header,
       this.footer,
-      this.enablePullDown: true,
-      this.enablePullUp: false,
-      this.enableTwoLevel: false,
+      this.enablePullDown = true,
+      this.enablePullUp = false,
+      this.enableTwoLevel = false,
       this.onRefresh,
       this.onLoading,
       this.onTwoLevel,
@@ -237,13 +234,13 @@ class SmartRefresher extends StatefulWidget {
   /// for example,NestedScrollView is a StalessWidget,it's headerSliversbuilder can return a slivers array,So if we want to do
   /// refresh above NestedScrollVIew,we must use this constrctor to implements refresh above NestedScrollView,but for now,NestedScrollView
   /// can not support overscroll out of edge
-  SmartRefresher.builder({
+  const SmartRefresher.builder({
     Key? key,
     required this.controller,
     required this.builder,
-    this.enablePullDown: true,
-    this.enablePullUp: false,
-    this.enableTwoLevel: false,
+    this.enablePullDown = true,
+    this.enablePullUp = false,
+    this.enableTwoLevel = false,
     this.onRefresh,
     this.onLoading,
     this.onTwoLevel,
@@ -283,10 +280,10 @@ class SmartRefresherState extends State<SmartRefresher> {
 
   final RefreshIndicator defaultHeader =
       defaultTargetPlatform == TargetPlatform.iOS
-          ? ClassicHeader()
-          : MaterialClassicHeader();
+          ? const ClassicHeader()
+          : const MaterialClassicHeader();
 
-  final LoadIndicator defaultFooter = ClassicFooter();
+  final LoadIndicator defaultFooter = const ClassicFooter();
 
   //build slivers from child Widget
   List<Widget>? _buildSliversByChild(BuildContext context, Widget? child,
@@ -363,7 +360,7 @@ class SmartRefresherState extends State<SmartRefresher> {
                     : 0.0), // need to fix default value by ios or android later
             bottomHitBoundary: conf?.bottomHitBoundary ??
                 (isBouncingPhysics ? double.infinity : 0.0))
-        .applyTo(!_canDrag ? NeverScrollableScrollPhysics() : physics);
+        .applyTo(!_canDrag ? const NeverScrollableScrollPhysics() : physics);
   }
 
   // build the customScrollView
@@ -418,16 +415,16 @@ class SmartRefresherState extends State<SmartRefresher> {
         anchor: anchor ?? 0.0,
         restorationId: restorationId,
         center: center,
-        physics:
-            _getScrollPhysics(conf, physics ?? AlwaysScrollableScrollPhysics()),
+        physics: _getScrollPhysics(
+            conf, physics ?? const AlwaysScrollableScrollPhysics()),
         slivers: slivers!,
         dragStartBehavior: dragStartBehavior ?? DragStartBehavior.start,
         reverse: reverse ?? false,
       );
-    } else if (childView is Scrollable) {
+    } else {
       body = Scrollable(
         physics: _getScrollPhysics(
-            conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
+            conf, childView.physics ?? const AlwaysScrollableScrollPhysics()),
         controller: childView.controller,
         axisDirection: childView.axisDirection,
         semanticChildCount: childView.semanticChildCount,
@@ -510,7 +507,7 @@ class SmartRefresherState extends State<SmartRefresher> {
   void initState() {
     // TODO: implement initState
     if (widget.controller.initialRefresh) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         //  if mounted,it avoid one situation: when init done,then dispose the widget before build.
         //  this   situation mostly TabBarView
         if (mounted) widget.controller.requestRefresh();
@@ -532,12 +529,13 @@ class SmartRefresherState extends State<SmartRefresher> {
     final RefreshConfiguration? configuration =
         RefreshConfiguration.of(context);
     Widget? body;
-    if (widget.builder != null)
+    if (widget.builder != null) {
       body = widget.builder!(
-          context,
-          _getScrollPhysics(configuration, AlwaysScrollableScrollPhysics())
-              as RefreshPhysics);
-    else {
+        context,
+        _getScrollPhysics(configuration, const AlwaysScrollableScrollPhysics())
+            as RefreshPhysics,
+      );
+    } else {
       List<Widget>? slivers =
           _buildSliversByChild(context, widget.child, configuration);
       body = _buildBodyBySlivers(widget.child, slivers, configuration);
@@ -596,12 +594,11 @@ class RefreshController {
   ///
   /// initialLoadStatus: footerMode default value
   RefreshController(
-      {this.initialRefresh: false,
+      {this.initialRefresh = false,
       RefreshStatus? initialRefreshStatus,
       LoadStatus? initialLoadStatus}) {
-    this.headerMode =
-        RefreshNotifier(initialRefreshStatus ?? RefreshStatus.idle);
-    this.footerMode = RefreshNotifier(initialLoadStatus ?? LoadStatus.idle);
+    headerMode = RefreshNotifier(initialRefreshStatus ?? RefreshStatus.idle);
+    footerMode = RefreshNotifier(initialLoadStatus ?? LoadStatus.idle);
   }
 
   void _bindState(SmartRefresherState state) {
@@ -651,10 +648,10 @@ class RefreshController {
 
   /// make the header enter refreshing state,and callback onRefresh
   Future<void>? requestRefresh(
-      {bool needMove: true,
-      bool needCallback: true,
-      Duration duration: const Duration(milliseconds: 500),
-      Curve curve: Curves.linear}) {
+      {bool needMove = true,
+      bool needCallback = true,
+      Duration duration = const Duration(milliseconds: 500),
+      Curve curve = Curves.linear}) {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     if (isRefresh) return Future.value();
@@ -664,8 +661,9 @@ class RefreshController {
     if (indicatorElement == null || _refresherState == null) return null;
     (indicatorElement.state as RefreshIndicatorState).floating = true;
 
-    if (needMove && _refresherState!.mounted)
+    if (needMove && _refresherState!.mounted) {
       _refresherState!.setCanDrag(false);
+    }
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
         // - 0.0001 is for NestedScrollView.
@@ -679,9 +677,10 @@ class RefreshController {
               headerMode!.value = RefreshStatus.refreshing;
             } else {
               headerMode!.setValueWithNoNotify(RefreshStatus.refreshing);
-              if (indicatorElement.state.mounted)
+              if (indicatorElement.state.mounted) {
                 (indicatorElement.state as RefreshIndicatorState)
                     .setState(() {});
+              }
             }
           }
         });
@@ -691,12 +690,13 @@ class RefreshController {
         headerMode!.value = RefreshStatus.refreshing;
       });
     }
+    return null;
   }
 
   /// make the header enter refreshing state,and callback onRefresh
   Future<void> requestTwoLevel(
-      {Duration duration: const Duration(milliseconds: 300),
-      Curve curve: Curves.linear}) {
+      {Duration duration = const Duration(milliseconds: 300),
+      Curve curve = Curves.linear}) {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
     headerMode!.value = RefreshStatus.twoLevelOpening;
@@ -708,10 +708,10 @@ class RefreshController {
 
   /// make the footer enter loading state,and callback onLoading
   Future<void>? requestLoading(
-      {bool needMove: true,
-      bool needCallback: true,
-      Duration duration: const Duration(milliseconds: 300),
-      Curve curve: Curves.linear}) {
+      {bool needMove = true,
+      bool needCallback = true,
+      Duration duration = const Duration(milliseconds: 300),
+      Curve curve = Curves.linear}) {
     assert(position != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
     if (isLoading) return Future.value();
@@ -720,8 +720,9 @@ class RefreshController {
 
     if (indicatorElement == null || _refresherState == null) return null;
     (indicatorElement.state as LoadIndicatorState).floating = true;
-    if (needMove && _refresherState!.mounted)
+    if (needMove && _refresherState!.mounted) {
       _refresherState!.setCanDrag(false);
+    }
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
         await position
@@ -734,8 +735,9 @@ class RefreshController {
               footerMode!.value = LoadStatus.loading;
             } else {
               footerMode!.setValueWithNoNotify(LoadStatus.loading);
-              if (indicatorElement.state.mounted)
+              if (indicatorElement.state.mounted) {
                 (indicatorElement.state as LoadIndicatorState).setState(() {});
+              }
             }
           }
         });
@@ -750,7 +752,7 @@ class RefreshController {
   /// request complete,the header will enter complete state,
   ///
   /// resetFooterState : it will set the footer state from noData to idle
-  void refreshCompleted({bool resetFooterState: false}) {
+  void refreshCompleted({bool resetFooterState = false}) {
     headerMode?.value = RefreshStatus.completed;
     if (resetFooterState) {
       resetNoData();
@@ -759,10 +761,10 @@ class RefreshController {
 
   /// end twoLeveling,will return back first floor
   Future<void>? twoLevelComplete(
-      {Duration duration: const Duration(milliseconds: 500),
-      Curve curve: Curves.linear}) {
+      {Duration duration = const Duration(milliseconds: 500),
+      Curve curve = Curves.linear}) {
     headerMode?.value = RefreshStatus.twoLevelClosing;
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       position!
           .animateTo(0.0, duration: duration, curve: curve)
           .whenComplete(() {
@@ -785,7 +787,7 @@ class RefreshController {
   /// after data returned,set the footer state to idle
   void loadComplete() {
     // change state after ui update,else it will have a bug:twice loading
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       footerMode?.value = LoadStatus.idle;
     });
   }
@@ -793,14 +795,14 @@ class RefreshController {
   /// If catchError happen,you may call loadFailed indicate fetch data from network failed
   void loadFailed() {
     // change state after ui update,else it will have a bug:twice loading
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       footerMode?.value = LoadStatus.failed;
     });
   }
 
   /// load more success without error,but no data returned
   void loadNoData() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       footerMode?.value = LoadStatus.noMore;
     });
   }
@@ -829,6 +831,7 @@ class RefreshController {
 ///
 /// * [SmartRefresher], a widget help attach the refresh and load more function
 class RefreshConfiguration extends InheritedWidget {
+  // ignore: annotate_overrides, overridden_fields
   final Widget child;
 
   /// global default header builder
@@ -900,34 +903,34 @@ class RefreshConfiguration extends InheritedWidget {
   /// toggle of  loadmore vibrate
   final bool enableLoadMoreVibrate;
 
-  RefreshConfiguration(
+  const RefreshConfiguration(
       {Key? key,
       required this.child,
       this.headerBuilder,
       this.footerBuilder,
-      this.dragSpeedRatio: 1.0,
+      this.dragSpeedRatio = 1.0,
       this.shouldFooterFollowWhenNotFull,
-      this.enableScrollWhenTwoLevel: true,
-      this.enableLoadingWhenNoData: false,
-      this.enableBallisticRefresh: false,
-      this.springDescription: const SpringDescription(
+      this.enableScrollWhenTwoLevel = true,
+      this.enableLoadingWhenNoData = false,
+      this.enableBallisticRefresh = false,
+      this.springDescription = const SpringDescription(
         mass: 2.2,
         stiffness: 150,
         damping: 16,
       ),
-      this.enableScrollWhenRefreshCompleted: false,
-      this.enableLoadingWhenFailed: true,
-      this.twiceTriggerDistance: 150.0,
-      this.closeTwoLevelDistance: 80.0,
-      this.skipCanRefresh: false,
+      this.enableScrollWhenRefreshCompleted = false,
+      this.enableLoadingWhenFailed = true,
+      this.twiceTriggerDistance = 150.0,
+      this.closeTwoLevelDistance = 80.0,
+      this.skipCanRefresh = false,
       this.maxOverScrollExtent,
-      this.enableBallisticLoad: true,
+      this.enableBallisticLoad = true,
       this.maxUnderScrollExtent,
-      this.headerTriggerDistance: 80.0,
-      this.footerTriggerDistance: 15.0,
-      this.hideFooterWhenNotFull: false,
-      this.enableRefreshVibrate: false,
-      this.enableLoadMoreVibrate: false,
+      this.headerTriggerDistance = 80.0,
+      this.footerTriggerDistance = 15.0,
+      this.hideFooterWhenNotFull = false,
+      this.enableRefreshVibrate = false,
+      this.enableLoadMoreVibrate = false,
       this.topHitBoundary,
       this.bottomHitBoundary})
       : assert(headerTriggerDistance > 0),

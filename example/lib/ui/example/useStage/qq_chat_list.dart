@@ -119,7 +119,7 @@ class _QQChatListState extends State<QQChatList> {
                       _refreshController.loadComplete();
                     },
                     footer: CustomFooter(
-                      loadStyle: LoadStyle.ShowAlways,
+                      loadStyle: LoadStyle.showAlways,
                       builder: (context, mode) {
                         if (mode == LoadStatus.loading) {
                           return Container(
@@ -183,9 +183,12 @@ class _QQChatListState extends State<QQChatList> {
                           margin: EdgeInsets.all(10.0),
                         ),
                       ),
-                      RaisedButton(
+                      ElevatedButton(
                         child: Text("发送"),
-                        color: Colors.blueAccent,
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith(
+                              (states) => Colors.blueAccent),
+                        ),
                         onPressed: () {
                           _scrollController.jumpTo(0.0);
                           data.insert(

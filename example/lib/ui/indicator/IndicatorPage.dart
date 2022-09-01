@@ -55,7 +55,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (BuildContext context) => IndicatorActivity(
                       title: "经典指示器(跟随)",
-                      header: ClassicHeader(refreshStyle: RefreshStyle.Follow),
+                      header: ClassicHeader(refreshStyle: RefreshStyle.follow),
                     )));
           },
           imgRes: "images/classical_follow.gif"),
@@ -66,7 +66,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
                 builder: (BuildContext context) => IndicatorActivity(
                       title: "经典指示器(不跟随)",
                       header:
-                          ClassicHeader(refreshStyle: RefreshStyle.UnFollow),
+                          ClassicHeader(refreshStyle: RefreshStyle.unFollow),
                     )));
           },
           imgRes: "images/classical_unfollow.gif"),
@@ -99,7 +99,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
                     reverse: false,
                     title: "bezier+circle",
                     header: BezierCircleHeader(
-                      dismissType: BezierDismissType.ScaleToCenter,
+                      dismissType: BezierDismissType.scaleToCenter,
                     ))));
           },
           imgRes: "images/bezier.gif"),
@@ -121,7 +121,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
                       title: "底部指示器(经常显示)",
                       footer: ClassicFooter(
                         height: 80.0,
-                        loadStyle: LoadStyle.ShowAlways,
+                        loadStyle: LoadStyle.showAlways,
                       ),
                     )));
           },
@@ -137,7 +137,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
                           reverse: false,
                           title: "底部指示器(经常隐藏)",
                           footer: ClassicFooter(
-                            loadStyle: LoadStyle.HideAlways,
+                            loadStyle: LoadStyle.hideAlways,
                           )),
                       footerTriggerDistance: -30.0,
                       enableLoadingWhenFailed: true,
@@ -158,7 +158,7 @@ class _IndicatorPageState extends State<IndicatorPage> {
                             reverse: false,
                             title: "底部指示器(只有加载中才显示)",
                             footer: ClassicFooter(
-                              loadStyle: LoadStyle.ShowWhenLoading,
+                              loadStyle: LoadStyle.showWhenLoading,
                             )),
                         enableLoadingWhenFailed: true,
                         maxUnderScrollExtent: 100.0,

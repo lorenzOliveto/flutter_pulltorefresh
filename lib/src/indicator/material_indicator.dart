@@ -4,10 +4,8 @@
  * Time: 2019/5/19 下午9:23
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
-import 'package:flutter/widgets.dart';
 import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 
@@ -34,16 +32,16 @@ class MaterialClassicHeader extends RefreshIndicator {
 
   const MaterialClassicHeader({
     Key? key,
-    double height: 80.0,
+    double height = 80.0,
     this.semanticsLabel,
     this.semanticsValue,
     this.color,
-    double offset: 0,
-    this.distance: 50.0,
+    double offset = 0,
+    this.distance = 50.0,
     this.backgroundColor,
   }) : super(
           key: key,
-          refreshStyle: RefreshStyle.Front,
+          refreshStyle: RefreshStyle.front,
           offset: offset,
           height: height,
         );
@@ -74,21 +72,21 @@ class _MaterialClassicHeaderState
         value: 0.0,
         lowerBound: 0.0,
         upperBound: 1.0,
-        duration: Duration(milliseconds: 500));
+        duration: const Duration(milliseconds: 500));
     _valueAni.addListener(() {
       // frequently setState will decline the performance
       if (mounted && _position!.pixels <= 0) setState(() {});
     });
     _positionController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     _scaleFactor = AnimationController(
         vsync: this,
         value: 1.0,
         lowerBound: 0.0,
         upperBound: 1.0,
-        duration: Duration(milliseconds: 300));
+        duration: const Duration(milliseconds: 300));
     _positionFactor = _positionController.drive(Tween<Offset>(
-        begin: Offset(0.0, -1.0), end: Offset(0.0, widget.height / 44.0)));
+        begin: const Offset(0.0, -1.0), end: Offset(0.0, widget.height / 44.0)));
     super.initState();
   }
 
@@ -107,6 +105,7 @@ class _MaterialClassicHeaderState
 
   Widget _buildIndicator(Color outerColor) {
     return SlideTransition(
+      position: _positionFactor!,
       child: ScaleTransition(
         scale: _scaleFactor,
         child: Align(
@@ -122,7 +121,6 @@ class _MaterialClassicHeaderState
           ),
         ),
       ),
-      position: _positionFactor!,
     );
   }
 
@@ -195,10 +193,10 @@ class WaterDropMaterialHeader extends MaterialClassicHeader {
   const WaterDropMaterialHeader({
     Key? key,
     String? semanticsLabel,
-    double distance: 60.0,
-    double offset: 0,
+    double distance = 60.0,
+    double offset = 0,
     String? semanticsValue,
-    Color color: Colors.white,
+    Color color = Colors.white,
     Color? backgroundColor,
   }) : super(
             key: key,
@@ -227,18 +225,18 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
     super.initState();
     _bezierController = AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
         upperBound: 1.5,
         lowerBound: 0.0,
         value: 0.0);
     _positionController = AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         upperBound: 1.0,
         lowerBound: 0.0,
         value: 0.0);
     _positionFactor = _positionController
-        .drive(Tween<Offset>(begin: Offset(0.0, -0.5), end: Offset(0.0, 1.5)));
+        .drive(Tween<Offset>(begin: const Offset(0.0, -0.5), end: const Offset(0.0, 1.5)));
   }
 
   @override
@@ -261,10 +259,10 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
     _bezierController!.value = 1.01;
     _showWater = true;
     _bezierController!.animateTo(1.5,
-        curve: Curves.bounceOut, duration: Duration(milliseconds: 550));
+        curve: Curves.bounceOut, duration: const Duration(milliseconds: 550));
     return _positionController
         .animateTo(widget.distance / widget.height,
-            curve: Curves.bounceOut, duration: Duration(milliseconds: 550))
+            curve: Curves.bounceOut, duration: const Duration(milliseconds: 550))
         .then((_) {
       _showWater = false;
     });
@@ -309,7 +307,8 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
   @override
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
     // TODO: implement buildContent
-    return Container(
+    return SizedBox(
+      height: 100.0,
       child: Stack(
         children: <Widget>[
           CustomPaint(
@@ -320,8 +319,6 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
             child: Container(),
           ),
           CustomPaint(
-            child: _buildIndicator(
-                widget.backgroundColor ?? Theme.of(context).primaryColor),
             painter: _showWater
                 ? _WaterPainter(
                     ratio: widget.distance / widget.height,
@@ -329,10 +326,11 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
                         Theme.of(context).primaryColor,
                     listener: _positionFactor)
                 : null,
+            child: _buildIndicator(
+                widget.backgroundColor ?? Theme.of(context).primaryColor),
           )
         ],
       ),
-      height: 100.0,
     );
   }
 }

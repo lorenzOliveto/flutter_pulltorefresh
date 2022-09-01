@@ -118,7 +118,7 @@ class ForceFullExample extends StatelessWidget {
         _refreshController.loadComplete();
       },
       footer: ClassicFooter(
-        loadStyle: LoadStyle.ShowWhenLoading,
+        loadStyle: LoadStyle.showWhenLoading,
       ),
       child: FillEmptyCustomScrollView(
         enableFillEmpty:

@@ -7,8 +7,6 @@
 // convert footer to header to use ,behaviour almost same with header
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_gifimage/flutter_gifimage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../Item.dart';
@@ -55,7 +53,7 @@ class _ConvertFooterState extends State<ConvertFooter> {
         child: SmartRefresher(
           enablePullUp: true,
           footer: ClassicFooter(
-            loadStyle: LoadStyle.ShowWhenLoading,
+            loadStyle: LoadStyle.showWhenLoading,
           ),
           child: buildCtn(),
           onLoading: () async {

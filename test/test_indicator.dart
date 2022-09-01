@@ -9,7 +9,7 @@ import 'package:flutter/material.dart'
     hide RefreshIndicatorState, RefreshIndicator;
 
 class TestHeader extends RefreshIndicator {
-  const TestHeader();
+  const TestHeader({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState

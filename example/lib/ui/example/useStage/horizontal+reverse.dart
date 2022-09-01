@@ -164,7 +164,6 @@ class _HorizontalRefreshState extends State<HorizontalRefresh>
     );
   }
 
-  @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => false;
 }

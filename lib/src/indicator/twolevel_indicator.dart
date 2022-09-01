@@ -5,8 +5,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'classic_indicator.dart';
 import '../smart_refresher.dart';
 
@@ -89,11 +87,11 @@ class TwoLevelHeader extends StatelessWidget {
 
   const TwoLevelHeader(
       {Key? key,
-      this.height: 80.0,
+      this.height = 80.0,
       this.decoration,
-      this.displayAlignment: TwoLevelDisplayAlignment.fromBottom,
-      this.completeDuration: const Duration(milliseconds: 600),
-      this.textStyle: const TextStyle(color: const Color(0xff555555)),
+      this.displayAlignment = TwoLevelDisplayAlignment.fromBottom,
+      this.completeDuration = const Duration(milliseconds: 600),
+      this.textStyle = const TextStyle(color: Color(0xff555555)),
       this.releaseText,
       this.refreshingText,
       this.canTwoLevelIcon,
@@ -101,11 +99,11 @@ class TwoLevelHeader extends StatelessWidget {
       this.completeText,
       this.failedText,
       this.idleText,
-      this.iconPos: IconPosition.left,
-      this.spacing: 15.0,
+      this.iconPos = IconPosition.left,
+      this.spacing = 15.0,
       this.refreshingIcon,
-      this.failedIcon: const Icon(Icons.error, color: Colors.grey),
-      this.completeIcon: const Icon(Icons.done, color: Colors.grey),
+      this.failedIcon = const Icon(Icons.error, color: Colors.grey),
+      this.completeIcon = const Icon(Icons.done, color: Colors.grey),
       this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
       this.releaseIcon = const Icon(Icons.refresh, color: Colors.grey),
       this.twoLevelWidget});
@@ -115,8 +113,8 @@ class TwoLevelHeader extends StatelessWidget {
     // TODO: implement build
     return ClassicHeader(
       refreshStyle: displayAlignment == TwoLevelDisplayAlignment.fromBottom
-          ? RefreshStyle.Follow
-          : RefreshStyle.Behind,
+          ? RefreshStyle.follow
+          : RefreshStyle.behind,
       height: height,
       refreshingIcon: refreshingIcon,
       refreshingText: refreshingText,
@@ -143,15 +141,15 @@ class TwoLevelHeader extends StatelessWidget {
         if (displayAlignment == TwoLevelDisplayAlignment.fromBottom) {
           return Container(
             decoration: !isTwoLevel
-                ? (decoration ?? BoxDecoration(color: Colors.redAccent))
+                ? (decoration ?? const BoxDecoration(color: Colors.redAccent))
                 : null,
             height: SmartRefresher.ofState(context)!.viewportExtent,
             alignment: isTwoLevel ? null : Alignment.bottomCenter,
             child: isTwoLevel
                 ? twoLevelWidget
                 : Padding(
+                    padding: const EdgeInsets.only(bottom: 15),
                     child: child,
-                    padding: EdgeInsets.only(bottom: 15),
                   ),
           );
         } else {
@@ -160,11 +158,11 @@ class TwoLevelHeader extends StatelessWidget {
                 ? twoLevelWidget
                 : Container(
                     decoration: !isTwoLevel
-                        ? (decoration ?? BoxDecoration(color: Colors.redAccent))
+                        ? (decoration ?? const BoxDecoration(color: Colors.redAccent))
                         : null,
                     alignment: Alignment.bottomCenter,
+                    padding: const EdgeInsets.only(bottom: 15),
                     child: child,
-                    padding: EdgeInsets.only(bottom: 15),
                   ),
           );
         }

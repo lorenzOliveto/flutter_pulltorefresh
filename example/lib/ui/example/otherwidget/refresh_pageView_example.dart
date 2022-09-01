@@ -65,7 +65,7 @@ class PageViewExampleState extends State<PageViewExample>
         enablePullUp: true,
         enablePullDown: true,
         footer: ClassicFooter(
-          loadStyle: LoadStyle.ShowWhenLoading,
+          loadStyle: LoadStyle.showWhenLoading,
         ),
         controller: _refreshController,
         header: MaterialClassicHeader(),

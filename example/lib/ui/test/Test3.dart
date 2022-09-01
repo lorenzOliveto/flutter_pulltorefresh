@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -23,7 +22,7 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
   void _getDatas() {
     data.add(Row(
       children: <Widget>[
-        FlatButton(
+        TextButton(
             onPressed: () {
               _refreshController
                   .requestRefresh(needCallback: false)
@@ -34,7 +33,7 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
               });
             },
             child: Text("请求刷新")),
-        FlatButton(
+        TextButton(
             onPressed: () {
               _refreshController
                   .requestLoading(needCallback: false)
@@ -149,7 +148,7 @@ class Test3State extends State<Test3> with TickerProviderStateMixin {
         controller: _refreshController,
         footer: ClassicFooter(
           height: 60,
-          loadStyle: LoadStyle.ShowWhenLoading,
+          loadStyle: LoadStyle.showWhenLoading,
         ),
         header: TwoLevelHeader(
           twoLevelWidget: Center(

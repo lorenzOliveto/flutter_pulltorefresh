@@ -4,7 +4,6 @@
  * Time:  2019-07-26 18:22
  */
 
-import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_gifimage/flutter_gifimage.dart';
 import 'package:flutter/material.dart'
@@ -15,7 +14,7 @@ import 'package:flutter/material.dart'
   see page to find about usage: (https://github.com/peng8350/flutter_gifimage)
 */
 class GifHeader1 extends RefreshIndicator {
-  GifHeader1() : super(height: 80.0, refreshStyle: RefreshStyle.Follow);
+  GifHeader1() : super(height: 80.0, refreshStyle: RefreshStyle.follow);
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -120,7 +119,7 @@ class _GifFooter1State extends State<GifFooter1>
           width: 537.0,
         );
       },
-      loadStyle: LoadStyle.ShowWhenLoading,
+      loadStyle: LoadStyle.showWhenLoading,
       onModeChange: (mode) {
         if (mode == LoadStatus.loading) {
           _gifController.repeat(

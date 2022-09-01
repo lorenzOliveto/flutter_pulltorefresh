@@ -32,12 +32,12 @@ class RefreshStaggeredAndStickyState extends State<RefreshStaggeredAndSticky>
   void _getDatas() {
     data.add(Row(
       children: <Widget>[
-        FlatButton(
+        TextButton(
             onPressed: () {
               _refreshController.requestRefresh();
             },
             child: Text("请求刷新")),
-        FlatButton(
+        TextButton(
             onPressed: () {
               _refreshController.requestLoading();
             },

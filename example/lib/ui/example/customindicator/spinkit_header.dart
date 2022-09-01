@@ -126,7 +126,7 @@ class _CustomHeaderExampleState extends State<CustomHeaderExample>
           },
         ),
         header: CustomHeader(
-          refreshStyle: RefreshStyle.Behind,
+          refreshStyle: RefreshStyle.behind,
           onOffsetChange: (offset) {
             if (_refreshController.headerMode.value != RefreshStatus.refreshing)
               _scaleController.value = offset / 80.0;

@@ -31,7 +31,7 @@ class ShimmerHeader extends RefreshIndicator {
       double height: 80.0,
       this.period = const Duration(milliseconds: 1000),
       this.direction = ShimmerDirection.ltr})
-      : super(height: height, refreshStyle: RefreshStyle.Behind);
+      : super(height: height, refreshStyle: RefreshStyle.behind);
 
   @override
   State<StatefulWidget> createState() {
@@ -112,7 +112,7 @@ class ShimmerFooter extends LoadIndicator {
       this.noMore,
       this.period = const Duration(milliseconds: 1000),
       this.direction = ShimmerDirection.ltr,
-      LoadStyle loadStyle: LoadStyle.ShowAlways})
+      LoadStyle loadStyle: LoadStyle.showAlways})
       : super(height: height, loadStyle: loadStyle);
 
   @override

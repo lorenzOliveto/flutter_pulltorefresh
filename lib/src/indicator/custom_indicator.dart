@@ -9,10 +9,10 @@ import '../internals/indicator_wrap.dart';
 import '../smart_refresher.dart';
 
 /// custom header builder,you can use second paramter to know what header state is
-typedef Widget HeaderBuilder(BuildContext context, RefreshStatus? mode);
+typedef HeaderBuilder = Widget Function(BuildContext context, RefreshStatus? mode);
 
 /// custom footer builder,you can use second paramter to know what footerr state is
-typedef Widget FooterBuilder(BuildContext context, LoadStatus? mode);
+typedef FooterBuilder = Widget Function(BuildContext context, LoadStatus? mode);
 
 /// a custom Indicator for header
 ///
@@ -70,9 +70,9 @@ class CustomHeader extends RefreshIndicator {
     this.onOffsetChange,
     this.onModeChange,
     this.onResetValue,
-    double height: 60.0,
-    Duration completeDuration: const Duration(milliseconds: 600),
-    RefreshStyle refreshStyle: RefreshStyle.Follow,
+    double height = 60.0,
+    Duration completeDuration = const Duration(milliseconds: 600),
+    RefreshStyle refreshStyle = RefreshStyle.follow,
   }) : super(
             key: key,
             completeDuration: completeDuration,
@@ -147,12 +147,12 @@ class CustomFooter extends LoadIndicator {
 
   const CustomFooter({
     Key? key,
-    double height: 60.0,
+    double height = 60.0,
     this.onModeChange,
     this.onOffsetChange,
     this.readyLoading,
     this.endLoading,
-    LoadStyle loadStyle: LoadStyle.ShowAlways,
+    LoadStyle loadStyle = LoadStyle.showAlways,
     required this.builder,
     Function? onClick,
   }) : super(

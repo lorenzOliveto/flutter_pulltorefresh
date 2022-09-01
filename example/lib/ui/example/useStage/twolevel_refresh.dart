@@ -4,10 +4,8 @@
  * Time:  2019-06-26 16:28
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
-import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 /*
@@ -63,9 +61,13 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                 },
                 items: [
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.add), title: Text("二级刷新例子1")),
+                    icon: Icon(Icons.add),
+                    label: "二级刷新例子1",
+                  ),
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.border_clear), title: Text("二级刷新例子2"))
+                    icon: Icon(Icons.border_clear),
+                    label: "二级刷新例子2",
+                  )
                 ],
               )
             : null,
@@ -97,13 +99,13 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                               appBar: AppBar(),
                               body: Column(
                                 children: <Widget>[
-                                  RaisedButton(
+                                  ElevatedButton(
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
                                     child: Text("点击这里返回上一页!"),
                                   ),
-                                  RaisedButton(
+                                  ElevatedButton(
                                     onPressed: () {
                                       _refreshController1.requestTwoLevel();
                                     },
@@ -145,7 +147,7 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                   slivers: <Widget>[
                     SliverToBoxAdapter(
                       child: Container(
-                        child: RaisedButton(
+                        child: ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
@@ -205,8 +207,11 @@ class TwoLevelWidget extends StatelessWidget {
           Center(
             child: Wrap(
               children: <Widget>[
-                RaisedButton(
-                  color: Colors.greenAccent,
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith(
+                        (states) => Colors.greenAccent),
+                  ),
                   onPressed: () {},
                   child: Text("登陆"),
                 ),

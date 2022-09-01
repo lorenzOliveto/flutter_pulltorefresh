@@ -65,12 +65,6 @@ class _Test2State extends State<Test2> with TickerProviderStateMixin {
     );
   }
 
-  void _onOffsetCallback(bool isUp, double offset) {
-    // if you want change some widgets state ,you should rewrite the callback
-    if (isUp) {
-    } else {}
-  }
-
   @override
   void initState() {
     // TODO: implement initState
